@@ -16,7 +16,7 @@ class dbLogin {
         this.password = password;
     }
 
-    public void dbLogin() {
+    public void loginSystem() {
         Scanner sc = new Scanner(System.in);
         System.out.println("Introduce tu usuario:");
         String userInput = sc.nextLine();
@@ -38,8 +38,10 @@ class dbLogin {
                 int userType = result.getInt("user_role");
                 userRole userMenu = new userRole(userType);
                 userMenu.showMenu();
+                sc.close();
             } else {
                 System.out.println("Credenciales incorrectas");
+                sc.close();
             }
 
             conn.close();

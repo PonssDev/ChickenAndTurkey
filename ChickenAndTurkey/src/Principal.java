@@ -13,7 +13,7 @@ public class Principal {
             System.out.println("Conexión exitosa a la base de datos chickenandturkey.");
             conn.close();
             dbLogin login = new dbLogin(urlBD, "admin", "chicken123");
-            login.dbLogin(); // Call dbLogin method
+            login.loginSystem(); // Call dbLogin method
         } catch (SQLException e) {
             System.out.println("Error al conectar a la base de datos: " + e.getMessage());
         }
