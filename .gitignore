@@ -2,3 +2,4 @@
 ChickenAndTurkey/.vscode/settings.json
 .DS_Store
 .vscode/settings.json
+*.class
