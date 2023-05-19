@@ -6,6 +6,9 @@ public class userRole {
     }
 
     public void showMenu() {
+        // Tipos de usuario
+        // 1 = Administrador
+        // 2 = Administrativo
         if (userType == 1) {
             // Menu administrador
             menuAdministrador.mostrarMenu();

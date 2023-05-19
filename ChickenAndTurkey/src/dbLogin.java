@@ -26,7 +26,7 @@ class dbLogin {
         try {
             Connection conn = DriverManager.getConnection(urlBD, username, password);
 
-            // Consulta SQL
+            // SQL Query
             String sql = "SELECT * FROM usuarios WHERE username = ? AND password = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setString(1, userInput);
@@ -35,9 +35,11 @@ class dbLogin {
             ResultSet result = statement.executeQuery();
 
             if (result.next()) {
-                System.out.println("Correct"); // Credenciales son correctas
+                int userType = result.getInt("user_role");
+                userRole userMenu = new userRole(userType);
+                userMenu.showMenu();
             } else {
-                System.out.println("Incorrect"); // Credenciales incorrectas
+                System.out.println("Credenciales incorrectas");
             }
 
             conn.close();
