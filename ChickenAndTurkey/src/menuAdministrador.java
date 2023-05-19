@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class menuAdministrador {
     static Scanner teclado = new Scanner(System.in);
 
-    public void mostrarMenu() {
+    public static void mostrarMenu() {
         boolean salir = false;
         while (!salir) {
             System.out.println("******* MENU ADMINISTRADOR *******");
