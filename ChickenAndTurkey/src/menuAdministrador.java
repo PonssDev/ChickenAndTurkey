@@ -1,3 +1,8 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class menuAdministrador {
@@ -36,27 +41,36 @@ public class menuAdministrador {
     }
 
     public static void menuUsuariosAdministrador() {
-        System.out.println("******* MENU ADMINISTRADOR *******");
-        System.out.println();
-        System.out.println("1. Consultar usuarios");
-        System.out.println("2. Crear usuario");
-        System.out.println("3. Editar usuario");
-        System.out.println("Opcion: ");
-        int opcion = teclado.nextInt();
-        switch (opcion) {
-            case 1:
-                consultarUsuario();
-                break;
-            case 2:
+        boolean salir = false;
+        while (!salir) {
+            System.out.println("******* MENU ADMINISTRADOR *******");
+            System.out.println();
+            System.out.println("USUARIOS");
+            System.out.println();
+            System.out.println("1. Consultar usuarios");
+            System.out.println("2. Crear usuario");
+            System.out.println("3. Editar usuario");
+            System.out.println("4. Volver atrás");
+            System.out.println("Opcion: ");
+            int opcion = teclado.nextInt();
 
-                break;
-            case 3:
-
-                break;
-            default:
-                break;
-
+            switch (opcion) {
+                case 1:
+                    consultarUsuarios();
+                    break;
+                case 2:
+                    crearUsuario();
+                    break;
+                case 3:
+                    salir = true;
+                    break;
+                case 4:
+                    return; // Volver atrás al menú principal
+                default:
+                    break;
+            }
         }
+
     }
 
     public static void menuVehiculosADministrador() {
@@ -72,10 +86,60 @@ public class menuAdministrador {
         System.out.println("1. Crear informe");
     }
 
-    public static void consultarUsuario() {
+    public static void crearUsuario() {
         System.out.println("Nombre: ");
-        System.out.println("Apellido: ");
+    }
 
+    public static void consultarUsuario() {
+        System.out.println("DNI: ");
+        String dni = teclado.next();
+
+        String urlBD = "jdbc:mysql://localhost:3306/Chickenandturkey";
+        String username = "admin";
+        String password = "chicken123";
+
+        String query = "SELECT t.DNI, t.nombre, t.apellidos, t.edad, r.rol " +
+                "FROM Trabajadores t " +
+                "JOIN roles r ON t.id_roles = r.id " +
+                "WHERE t.DNI = ?";
+
+        try (Connection conn = DriverManager.getConnection(urlBD, username, password);
+                PreparedStatement statement = conn.prepareStatement(query)) {
+            statement.setString(1, dni);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                String DNI = resultSet.getString("DNI");
+                String nombre = resultSet.getString("nombre");
+                String apellidos = resultSet.getString("apellidos");
+                int edad = resultSet.getInt("edad");
+                String rol = resultSet.getString("rol");
+
+                System.out.println("DNI: " + DNI);
+                System.out.println("Nombre: " + nombre);
+                System.out.println("Apellido: " + apellidos);
+                System.out.println("Edad: " + edad);
+                System.out.println("Rol: " + rol);
+            } else {
+                System.out.println("No se encontró ningún usuario con el DNI proporcionado.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al consultar el usuario: " + e.getMessage());
+        }
+
+    }
+
+    public static void consultarUsuarios() {
+        boolean consultarOtro = true;
+        do {
+            consultarUsuario();
+            System.out.println();
+            System.out.println("¿Desea consultar otro usuario? (s/n)");
+            String respuesta = teclado.next();
+            if (respuesta.equalsIgnoreCase("n")) {
+                consultarOtro = false;
+            }
+        } while (consultarOtro);
     }
 
     public static void carniceros() {
