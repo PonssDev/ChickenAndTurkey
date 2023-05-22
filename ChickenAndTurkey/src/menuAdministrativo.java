@@ -1,84 +1,161 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Scanner;
 
-public class menuAdministrativo {
+public class menuAdministrativo extends Principal {
     static Scanner teclado = new Scanner(System.in);
 
     public static void mostrarMenu() {
         boolean salir = false;
         while (!salir) {
-            System.out.println("******* MENU ADMINISTRADOR *******");
+            System.out.println("** MENU ADMINISTRATIVO **");
             System.out.println();
             System.out.println("1. Usuarios");
-            System.out.println("2. Vehiculos");
-            System.out.println("4. Salir");
-            System.out.println("Opcion: ");
+            System.out.println("2. Vehículos");
+            System.out.println("3. Salir");
+            System.out.println("Opción: ");
             int opcion = teclado.nextInt();
 
             switch (opcion) {
                 case 1:
-                    menuUsuariosAdministrador();
+                    menuUsuariosAdministrativo();
                     break;
                 case 2:
-                    menuVehiculosADministrador();
+                    buscarVehiculo();
                     break;
                 case 3:
-                    informes();
-                    break;
-                case 4:
                     salir = true;
                     break;
                 default:
+                    System.out.println("Opción inválida. Por favor, seleccione una opción válida.");
                     break;
             }
-
         }
     }
 
-    public static void menuUsuariosAdministrador() {
-        System.out.println("******* MENU ADMINISTRADOR *******");
+    public static void menuUsuariosAdministrativo() {
+        System.out.println("** MENU USUARIOS **");
         System.out.println();
         System.out.println("1. Consultar usuarios");
-        System.out.println("2. Crear usuario");
-        System.out.println("3. Editar usuario");
-        System.out.println("Opcion: ");
+        System.out.println("2. Salir");
+        System.out.println("Opción: ");
         int opcion = teclado.nextInt();
+
         switch (opcion) {
             case 1:
-                consultarUsuario();
+                consultarUsuarios();
                 break;
             case 2:
-
-                break;
-            case 3:
-
+                // Salir del menú usuarios
                 break;
             default:
+                System.out.println("Opción inválida. Por favor, seleccione una opción válida.");
                 break;
-
         }
     }
 
-    public static void menuVehiculosADministrador() {
-        System.out.println("******* MENU ADMINISTRADOR *******");
+    public static void consultarUsuarios() {
+        System.out.println("** CONSULTAR USUARIOS **");
         System.out.println();
-        System.out.println("1. Consualtar vehiculos");
-        System.out.println("Crear vehiculo");
-        System.out.println("Editar vehiculo");
+        System.out.println("Ingrese el DNI del usuario: ");
+        String dni = teclado.next();
+
+        // Lógica para consultar usuario por DNI
+        boolean usuarioEncontrado = consultarUsuarioPorDNI(dni);
+        if (usuarioEncontrado) {
+            System.out.println("Usuario encontrado con el DNI: " + dni);
+        } else {
+            System.out.println("No se encontró ningún usuario con el DNI: " + dni);
+            System.out.println("1. Ingresar otro DNI");
+            System.out.println("2. Volver atrás");
+            System.out.println("Opción: ");
+            int opcion = teclado.nextInt();
+
+            switch (opcion) {
+                case 1:
+                    consultarUsuarios(); // Vuelve a llamar al método para ingresar otro DNI
+                    break;
+                case 2:
+                    // Volver al menú usuarios administrativo
+                    break;
+                default:
+                    System.out.println("Opción inválida. Volviendo al menú anterior...");
+                    break;
+            }
+        }
     }
 
-    public static void informes() {
-        System.out.println("******* MENU ADMINISTRADOR *******");
-        System.out.println("1. Crear informe");
+    private static boolean consultarUsuarioPorDNI(String dni) {
+        String urlBD = "jdbc:mysql://localhost:3306/Chickenandturkey";
+        String username = "admin";
+        String password = "chicken123";
+
+        String query = "SELECT t.DNI, t.nombre, t.apellidos, t.edad, r.rol " +
+                "FROM Trabajadores t " +
+                "JOIN roles r ON t.id_roles = r.id " +
+                "WHERE t.DNI = ?";
+
+        try (Connection conn = DriverManager.getConnection(urlBD, username, password);
+             PreparedStatement statement = conn.prepareStatement(query)) {
+            statement.setString(1, dni);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                
+                String nombre = resultSet.getString("nombre");
+                String apellidos = resultSet.getString("apellidos");
+                int edad = resultSet.getInt("edad");
+                String rol = resultSet.getString("rol");
+                System.out.println("Nombre: " + nombre);
+                System.out.println("Apellido: " + apellidos);
+                System.out.println("Edad: " + edad);
+                System.out.println("Rol: " + rol);
+                System.out.println("");
+                System.out.println("");
+
+                return true; // Usuario encontrado
+            } else {
+                return false; // Usuario no encontrado
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al consultar el usuario: " + e.getMessage());
+            return false; // Error en la consulta
+        }
     }
 
-    public static void consultarUsuario() {
-        System.out.println("Nombre: ");
-        System.out.println("Apellido: ");
-
-    }
-
-    public static void carniceros() {
-        System.out.println("******* MENU ADMINISTRADOR *******");
+    public static void buscarVehiculo() {
+        System.out.println("** BUSCAR VEHÍCULO **");
         System.out.println();
+        System.out.println("Ingrese la matrícula del vehículo: ");
+        String matricula = teclado.next();
+
+        // Lógica para buscar vehículo por matrícula
+        boolean vehiculoEncontrado = buscarVehiculoPorMatricula(matricula);
+        if (!vehiculoEncontrado) {
+            System.out.println("No se encontró ningún vehículo con la matrícula: " + matricula);
+            System.out.println("1. Ingresar otra matrícula");
+            System.out.println("2. Volver atrás");
+            System.out.println("Opción: ");
+            int opcion = teclado.nextInt();
+
+            switch (opcion) {
+                case 1:
+                    buscarVehiculo(); // Vuelve a llamar al método para ingresar otra matrícula
+                    break;
+                case 2:
+                    // Volver al menú administrativo
+                    break;
+                default:
+                    System.out.println("Opción inválida. Volviendo al menú anterior...");
+                    break;
+            }
+        }
+    }
+
+    private static boolean buscarVehiculoPorMatricula(String matricula) {
+        return false;
     }
 }
