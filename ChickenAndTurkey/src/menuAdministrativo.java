@@ -36,19 +36,25 @@ public class menuAdministrativo extends Principal {
         }
     }
 
+
+
     public static void menuUsuariosAdministrativo() {
         System.out.println("** MENU USUARIOS **");
         System.out.println();
         System.out.println("1. Consultar usuarios");
-        System.out.println("2. Salir");
+        System.out.println("2. Listar usuarios");
+        System.out.println("3. Salir");
         System.out.println("Opción: ");
         int opcion = teclado.nextInt();
-
+    
         switch (opcion) {
             case 1:
                 consultarUsuarios();
                 break;
             case 2:
+                listarUsuarios();
+                break;
+            case 3:
                 // Salir del menú usuarios
                 break;
             default:
@@ -56,6 +62,7 @@ public class menuAdministrativo extends Principal {
                 break;
         }
     }
+    
 
     public static void consultarUsuarios() {
         System.out.println("** CONSULTAR USUARIOS **");
@@ -87,6 +94,40 @@ public class menuAdministrativo extends Principal {
             }
         }
     }
+
+    public static void listarUsuarios() {
+        String urlBD = "jdbc:mysql://localhost:3306/Chickenandturkey";
+        String username = "admin";
+        String password = "chicken123";
+    
+        String query = "SELECT t.DNI, t.nombre, t.apellidos, t.edad, r.rol " +
+                "FROM Trabajadores t " +
+                "JOIN roles r ON t.id_roles = r.id";
+    
+        try (Connection conn = DriverManager.getConnection(urlBD, username, password);
+             PreparedStatement statement = conn.prepareStatement(query)) {
+    
+            ResultSet resultSet = statement.executeQuery();
+    
+            while (resultSet.next()) {
+                String dni = resultSet.getString("DNI");
+                String nombre = resultSet.getString("nombre");
+                String apellidos = resultSet.getString("apellidos");
+                int edad = resultSet.getInt("edad");
+                String rol = resultSet.getString("rol");
+    
+                System.out.println("DNI: " + dni);
+                System.out.println("Nombre: " + nombre);
+                System.out.println("Apellidos: " + apellidos);
+                System.out.println("Edad: " + edad);
+                System.out.println("Rol: " + rol);
+                System.out.println("-------------------------");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al consultar los usuarios: " + e.getMessage());
+        }
+    }
+    
 
     private static boolean consultarUsuarioPorDNI(String dni) {
         String urlBD = "jdbc:mysql://localhost:3306/Chickenandturkey";
