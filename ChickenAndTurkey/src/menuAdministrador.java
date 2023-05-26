@@ -25,7 +25,15 @@ public class menuAdministrador {
             System.out.println("3. Informes");
             System.out.println("4. Salir");
             System.out.println("Opcion: ");
-            int opcion = teclado.nextInt();
+            int opcion;
+
+            try {
+                opcion = teclado.nextInt();
+            } catch (Exception e) {
+                System.out.println("Error: entrada inválida. Por favor, ingrese un número entero válido.");
+                teclado.nextLine();
+                continue;
+            }
 
             switch (opcion) {
                 case 1:
