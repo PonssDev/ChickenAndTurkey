@@ -16,6 +16,7 @@ public class Principal {
             login.loginSystem(); // Call dbLogin method
         } catch (SQLException e) {
             System.out.println("Error al conectar a la base de datos: " + e.getMessage());
+
         }
     }
 }

@@ -13,7 +13,6 @@ public class userRole {
             // Menu administrador
             menuAdministrador.mostrarMenu();
         } else if (userType == 2) {
-            // TODO: Menú administrativo
             menuAdministrativo.mostrarMenu();
         } else {
             System.out.println("Tipo de usuario incorrecto");

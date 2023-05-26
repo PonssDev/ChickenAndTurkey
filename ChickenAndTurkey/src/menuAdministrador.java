@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -7,6 +10,10 @@ import java.util.Scanner;
 
 public class menuAdministrador {
     static Scanner teclado = new Scanner(System.in);
+
+    static String urlBD = "jdbc:mysql://localhost:3306/Chickenandturkey";
+    static String username = "admin";
+    static String password = "chicken123";
 
     public static void mostrarMenu() {
         boolean salir = false;
@@ -77,17 +84,97 @@ public class menuAdministrador {
         System.out.println("******* MENU ADMINISTRADOR *******");
         System.out.println();
         System.out.println("1. Consualtar vehiculos");
-        System.out.println("Crear vehiculo");
-        System.out.println("Editar vehiculo");
+        System.out.println("2. Crear vehiculo");
+        System.out.println("3. Editar vehiculo");
     }
 
     public static void informes() {
         System.out.println("******* MENU ADMINISTRADOR *******");
         System.out.println("1. Crear informe");
+
+        Scanner scanner = new Scanner(System.in);
+        int opcion = scanner.nextInt();
+
+        switch (opcion) {
+            case 1:
+                crearInforme();
+                break;
+
+            default:
+                System.out.println("Opción no valida.");
+                break;
+        }
+        scanner.close();
+    }
+
+    private static void crearInforme() {
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Ingrese el nombre del informe: ");
+        String nombreInforme = scanner.nextLine();
+
+        System.out.println("Introducta el asunto del informe: ");
+        String asuntoInforme = scanner.nextLine();
+
+        System.out.println("Introduzca el mensaje del informe: ");
+        String mensajeInforme = scanner.nextLine();
+
+        String rutaCarpeta = "C://informes";
+        String rutaArchivo = rutaCarpeta + "//" + nombreInforme + ".txt";
+
+        File carpeta = new File(rutaCarpeta);
+        if (!carpeta.exists()) {
+            carpeta.mkdirs();
+        }
+
+        try {
+            FileWriter escritor = new FileWriter(rutaArchivo);
+            escritor.write("Nombre: " + nombreInforme + "\n");
+            escritor.write("Asunto: " + asuntoInforme + "\n");
+            escritor.write("Mensaje: " + mensajeInforme + "\n");
+            escritor.close();
+
+            System.out.println("Informe creado exitosamente en: " + rutaArchivo);
+        } catch (IOException e) {
+            System.out.println("Error al crear el informe: " + e.getMessage());
+        }
+        scanner.close();
     }
 
     public static void crearUsuario() {
-        System.out.println("Nombre: ");
+
+        try (Connection connection = DriverManager.getConnection(urlBD, username, password)) {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Ingrese el DNI del usuario:");
+            String dni = scanner.nextLine();
+            System.out.println("Ingrese el nombre del usuario:");
+            String nombre = scanner.nextLine();
+            System.out.println("Ingrese los apellidos del usuario:");
+            String apellidos = scanner.nextLine();
+            System.out.println("Ingrese la edad del usuario:");
+            int edad = Integer.parseInt(scanner.nextLine());
+            System.out.println("Ingrese el número de seguridad social del usuario:");
+            String numSS = scanner.nextLine();
+            System.out.println("Ingrese el salario del usuario:");
+            double salario = Double.parseDouble(scanner.nextLine());
+            System.out.println("Ingrese el ID de roles del usuario:");
+            int id_roles = Integer.parseInt(scanner.nextLine());
+
+            String query = "INSERT INTO trabajadores (dni, nombre, apellidos, edad, numSS, salario, id_roles) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, dni);
+            statement.setString(2, nombre);
+            statement.setString(3, apellidos);
+            statement.setInt(4, edad);
+            statement.setString(5, numSS);
+            statement.setDouble(6, salario);
+            statement.setInt(7, id_roles);
+            statement.executeUpdate();
+            scanner.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void consultarUsuario() {
