@@ -21,7 +21,7 @@ public class menuAdministrador {
             System.out.println("******* MENU ADMINISTRADOR *******");
             System.out.println();
             System.out.println("1. Usuarios");
-            System.out.println("2. Vehiculos");
+            System.out.println("2. Vehiculos"); // TODO: Arreglar crear y editar vehículos
             System.out.println("3. Informes");
             System.out.println("4. Salir");
             System.out.println("Opcion: ");
