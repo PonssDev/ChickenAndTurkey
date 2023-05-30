@@ -112,9 +112,10 @@ public class menuAdministrador {
                 System.out.println("Opción no valida.");
                 break;
         }
+        scanner.close();
     }
 
-    private static void crearInforme() {
+    public static void crearInforme() {
 
         Scanner scanner = new Scanner(System.in);
 
@@ -146,6 +147,7 @@ public class menuAdministrador {
         } catch (IOException e) {
             System.out.println("Error al crear el informe: " + e.getMessage());
         }
+        scanner.close();
     }
 
     public static void crearUsuario() {

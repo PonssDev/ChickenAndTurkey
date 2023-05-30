@@ -129,7 +129,7 @@ public class menuAdministrativo extends Principal {
     }
     
 
-    private static boolean consultarUsuarioPorDNI(String dni) {
+    static boolean consultarUsuarioPorDNI(String dni) {
         String urlBD = "jdbc:mysql://localhost:3306/Chickenandturkey";
         String username = "admin";
         String password = "chicken123";
@@ -196,7 +196,53 @@ public class menuAdministrativo extends Principal {
         }
     }
 
-    private static boolean buscarVehiculoPorMatricula(String matricula) {
-        return false;
+    public static boolean buscarVehiculoPorMatricula(String matricula) {
+        String urlBD = "jdbc:mysql://localhost:3306/Chickenandturkey";
+        String username = "admin";
+        String password = "chicken123";
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            // Establecer la conexión con la base de datos
+            connection = DriverManager.getConnection(urlBD, username, password);
+
+            // Preparar la consulta SQL
+            String query = "SELECT * FROM vehiculos WHERE matricula = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, matricula);
+
+            // Ejecutar la consulta
+            resultSet = statement.executeQuery();
+
+            // Verificar si se encontró algún vehículo con la matrícula dada
+            if (resultSet.next()) {
+                // Se encontró el vehículo
+                return true;
+            } else {
+                // No se encontró el vehículo
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            // Cerrar los recursos
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
