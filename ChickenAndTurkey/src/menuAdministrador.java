@@ -54,7 +54,157 @@ public class menuAdministrador {
 
         }
     }
+    public static void menuVehiculosAdministrador() {
+        boolean salir = false;
+        while (!salir) {
+            System.out.println("******* MENU ADMINISTRADOR *******");
+            System.out.println();
+            System.out.println("VEHICULOS");
+            System.out.println();
+            System.out.println("1. Consultar vehiculos");
+            System.out.println("2. Crear vehiculo");
+            System.out.println("3. Editar vehiculo");
+            System.out.println("4. Volver atrás");
+            System.out.println("Opcion: ");
+            int opcion = teclado.nextInt();
 
+            switch (opcion) {
+                case 1:
+                    consultarVehiculos();
+                    break;
+                case 2:
+                    crearVehiculo();
+                    break;
+                case 3:
+                    editarVehiculo();
+                    break;
+                case 4:
+                    salir = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    public static void editarVehiculo() {
+        try (Connection connection = DriverManager.getConnection(urlBD, username, password)) {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Ingrese el ID del vehículo a editar:");
+            int idVehiculo = Integer.parseInt(scanner.nextLine());
+
+            // Verificar si el vehículo existe
+            String existenciaQuery = "SELECT * FROM vehiculos WHERE id_vehiculo = ?";
+            PreparedStatement existenciaStatement = connection.prepareStatement(existenciaQuery);
+            existenciaStatement.setInt(1, idVehiculo);
+            ResultSet existenciaResult = existenciaStatement.executeQuery();
+
+            if (existenciaResult.next()) {
+                System.out.println("Ingrese el nuevo modelo del vehículo:");
+                String nuevoModelo = scanner.nextLine();
+                System.out.println("Ingrese la nueva marca del vehículo:");
+                String nuevaMarca = scanner.nextLine();
+                System.out.println("Ingrese el nuevo combustible del vehículo:");
+                String nuevoCombustible = scanner.nextLine();
+                System.out.println("Ingrese el nuevo color del vehículo:");
+                String nuevoColor = scanner.nextLine();
+                System.out.println("Ingrese el nuevo motor del vehículo:");
+                String nuevoMotor = scanner.nextLine();
+                System.out.println("Ingrese la nueva matrícula del vehículo:");
+                String nuevaMatricula = scanner.nextLine();
+                System.out.println("Ingrese la nueva carga máxima del vehículo:");
+                int nuevaCargaMaxima = Integer.parseInt(scanner.nextLine());
+
+                // Actualizar los datos del vehículo
+                String editarQuery = "UPDATE vehiculos SET modelo = ?, marca = ?, combustible = ?, color = ?, motor = ?, matricula = ?, carga_maxima = ? WHERE id_vehiculo = ?";
+                PreparedStatement editarStatement = connection.prepareStatement(editarQuery);
+                editarStatement.setString(1, nuevoModelo);
+                editarStatement.setString(2, nuevaMarca);
+                editarStatement.setString(3, nuevoCombustible);
+                editarStatement.setString(4, nuevoColor);
+                editarStatement.setString(5, nuevoMotor);
+                editarStatement.setString(6, nuevaMatricula);
+                editarStatement.setInt(7, nuevaCargaMaxima);
+                editarStatement.setInt(8, idVehiculo);
+                editarStatement.executeUpdate();
+
+                System.out.println("El vehículo ha sido editado correctamente.");
+            } else {
+                System.out.println("No se encontró ningún vehículo con el ID proporcionado.");
+            }
+
+            scanner.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void consultarVehiculos() {
+        try (Connection connection = DriverManager.getConnection(urlBD, username, password)) {
+            String query = "SELECT * FROM vehiculos";
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int id_vehiculo = resultSet.getInt("id_vehiculo");
+                String modelo = resultSet.getString("modelo");
+                String marca = resultSet.getString("marca");
+                String combustible = resultSet.getString("combustible");
+                String color = resultSet.getString("color");
+                String motor = resultSet.getString("motor");
+                String matricula = resultSet.getString("matricula");
+                int carga_maxima = resultSet.getInt("carga_maxima");
+
+                System.out.println("ID Vehículo: " + id_vehiculo);
+                System.out.println("Modelo: " + modelo);
+                System.out.println("Marca: " + marca);
+                System.out.println("Combustible: " + combustible);
+                System.out.println("Color: " + color);
+                System.out.println("Motor: " + motor);
+                System.out.println("Matrícula: " + matricula);
+                System.out.println("Carga Máxima: " + carga_maxima);
+                System.out.println();
+                System.out.println("No se encontró ningún usuario con el DNI proporcionado.");
+            }
+
+            resultSet.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al consultar el usuario: " + e.getMessage());
+        }
+    }
+    public static void crearVehiculo() {
+        try (Connection connection = DriverManager.getConnection(urlBD, username, password)) {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Ingrese el modelo del vehículo:");
+            String modelo = scanner.nextLine();
+            System.out.println("Ingrese la marca del vehículo:");
+            String marca = scanner.nextLine();
+            System.out.println("Ingrese el combustible del vehículo:");
+            String combustible = scanner.nextLine();
+            System.out.println("Ingrese el color del vehículo:");
+            String color = scanner.nextLine();
+            System.out.println("Ingrese el motor del vehículo:");
+            String motor = scanner.nextLine();
+            System.out.println("Ingrese la matrícula del vehículo:");
+            String matricula = scanner.nextLine();
+            System.out.println("Ingrese la carga máxima del vehículo:");
+            int carga_maxima = Integer.parseInt(scanner.nextLine());
+
+            String query = "INSERT INTO vehiculos (modelo, marca, combustible, color, motor, matricula, carga_maxima) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, modelo);
+            statement.setString(2, marca);
+            statement.setString(3, combustible);
+            statement.setString(4, color);
+            statement.setString(5, motor);
+            statement.setString(6, matricula);
+            statement.setInt(7, carga_maxima);
+            statement.executeUpdate();
+            scanner.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     public static void menuUsuariosAdministrador() {
         boolean salir = false;
         while (!salir) {
