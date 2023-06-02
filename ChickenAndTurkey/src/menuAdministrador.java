@@ -257,7 +257,7 @@ public class menuAdministrador {
                     crearUsuario();
                     break;
                 case 3:
-                    salir = true; // TODO crear editar usuario.
+                   editarUsuario();
                     break;
                 case 4:
                     return; // Volver atrás al menú principal
@@ -415,6 +415,59 @@ public class menuAdministrador {
             System.out.println("Error al consultar el usuario: " + e.getMessage());
         }
 
+    }
+
+    public static void editarUsuario() {
+        try (Connection connection = DriverManager.getConnection(urlBD, username, password)) {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Ingrese el DNI del usuario que desea editar:");
+            String dni = scanner.nextLine();
+
+            // Verificar si el usuario existe antes de continuar con la edición
+            if (!existeUsuario(dni, connection)) {
+                System.out.println("No se encontró ningún usuario con el DNI proporcionado.");
+                return;
+            }
+
+            System.out.println("Ingrese el nuevo nombre del usuario:");
+            String nombre = scanner.nextLine();
+            System.out.println("Ingrese los nuevos apellidos del usuario:");
+            String apellidos = scanner.nextLine();
+            System.out.println("Ingrese la nueva edad del usuario:");
+            int edad = Integer.parseInt(scanner.nextLine());
+            System.out.println("Ingrese el nuevo número de seguridad social del usuario:");
+            String numSS = scanner.nextLine();
+            System.out.println("Ingrese el nuevo salario del usuario:");
+            double salario = Double.parseDouble(scanner.nextLine());
+            System.out.println("Ingrese el nuevo ID de roles del usuario:");
+            int id_roles = Integer.parseInt(scanner.nextLine());
+
+            String query = "UPDATE trabajadores SET nombre = ?, apellidos = ?, edad = ?, numSS = ?, salario = ?, id_roles = ? WHERE dni = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, nombre);
+            statement.setString(2, apellidos);
+            statement.setInt(3, edad);
+            statement.setString(4, numSS);
+            statement.setDouble(5, salario);
+            statement.setInt(6, id_roles);
+            statement.setString(7, dni);
+            statement.executeUpdate();
+
+            System.out.println("El usuario ha sido actualizado exitosamente.");
+            scanner.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static boolean existeUsuario(String dni, Connection connection) throws SQLException {
+        String query = "SELECT COUNT(*) AS count FROM trabajadores WHERE dni = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, dni);
+        ResultSet resultSet = statement.executeQuery();
+        resultSet.next();
+        int count = resultSet.getInt("count");
+        return count > 0;
     }
 
     /**
