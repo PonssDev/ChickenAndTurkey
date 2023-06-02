@@ -341,9 +341,19 @@ public class menuAdministrador {
      * datos.
      */
     public static void crearUsuario() {
-
         try (Connection connection = DriverManager.getConnection(urlBD, username, password)) {
             Scanner scanner = new Scanner(System.in);
+            
+            System.out.println("¿Desea asignar un vehículo al usuario? (s/n):");
+            String asignarVehiculo = scanner.nextLine();
+            
+            int idVehiculo = -1; // Valor predeterminado si no se asigna un vehículo
+            
+            if (asignarVehiculo.equalsIgnoreCase("s")) {
+                System.out.println("Ingrese la ID del vehículo:");
+                idVehiculo = Integer.parseInt(scanner.nextLine());
+            }
+            
             System.out.println("Ingrese el DNI del usuario:");
             String dni = scanner.nextLine();
             System.out.println("Ingrese el nombre del usuario:");
@@ -359,7 +369,7 @@ public class menuAdministrador {
             System.out.println("Ingrese el ID de roles del usuario:");
             int id_roles = Integer.parseInt(scanner.nextLine());
 
-            String query = "INSERT INTO trabajadores (dni, nombre, apellidos, edad, numSS, salario, id_roles) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO trabajadores (dni, nombre, apellidos, edad, numSS, salario, id_roles, id_vehiculo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, dni);
             statement.setString(2, nombre);
@@ -368,12 +378,17 @@ public class menuAdministrador {
             statement.setString(5, numSS);
             statement.setDouble(6, salario);
             statement.setInt(7, id_roles);
+            statement.setInt(8, idVehiculo);
             statement.executeUpdate();
+            
             scanner.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+
+
 
     /**
      * Método que permite al administrador consultar un usuario en la base de datos.
