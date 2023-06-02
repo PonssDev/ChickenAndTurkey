@@ -2,7 +2,20 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Clase principal que contiene el punto de entrada del programa.
+ * @author Alan
+ * @author Dani
+ * @author Toni
+ * @version 1.0
+ */
 public class Principal {
+
+    /**
+     * Punto de entrada del programa.
+     *
+     * @param args los argumentos de la línea de comandos.
+     */
     public static void main(String[] args) {
         String username = "admin";
         String password = "chicken123";

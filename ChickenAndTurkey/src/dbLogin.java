@@ -5,17 +5,39 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+/**
+ * Clase que representa un sistema de inicio de sesión en una base de datos.
+ * Permite autenticar usuarios mediante una conexión a la base de datos y
+ * verificar las credenciales proporcionadas.
+ *
+ */
 class dbLogin {
     private String urlBD;
     private String username;
     private String password;
 
+    /**
+     * Crea una nueva instancia de dbLogin con los parámetros de conexión
+     * especificados.
+     *
+     * @param urlBD    URL de la base de datos
+     * @param username Nombre de usuario para la conexión a la base de datos
+     * @param password Contraseña para la conexión a la base de datos
+     */
     public dbLogin(String urlBD, String username, String password) {
         this.urlBD = urlBD;
         this.username = username;
         this.password = password;
     }
 
+    /**
+     * Inicia el sistema de inicio de sesión.
+     * Solicita al usuario el nombre de usuario y la contraseña, y verifica las
+     * credenciales en la base de datos.
+     * Muestra el menú correspondiente al tipo de usuario si las credenciales son
+     * correctas.
+     * Cierra la conexión y los recursos utilizados.
+     */
     public void loginSystem() {
         Scanner sc = new Scanner(System.in);
         System.out.println("Introduce tu usuario:");
@@ -26,7 +48,7 @@ class dbLogin {
         try {
             Connection conn = DriverManager.getConnection(urlBD, username, password);
 
-            // SQL Query
+            // Consulta SQL
             String sql = "SELECT * FROM usuarios WHERE username = ? AND password = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setString(1, userInput);

@@ -8,6 +8,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+/**
+ * Muestra el menÃº principal del administrador y permite realizar diferentes
+ * acciones.
+ */
 public class menuAdministrador {
     static Scanner teclado = new Scanner(System.in);
 
@@ -40,7 +44,7 @@ public class menuAdministrador {
                     menuUsuariosAdministrador();
                     break;
                 case 2:
-                    menuVehiculosADministrador();
+                    menuVehiculosAdministrador();
                     break;
                 case 3:
                     informes();
@@ -54,6 +58,11 @@ public class menuAdministrador {
 
         }
     }
+
+    /**
+     * Muestra el menÃº de vehÃ­culos del administrador y permite realizar diferentes
+     * acciones relacionadas con vehÃ­culos.
+     */
     public static void menuVehiculosAdministrador() {
         boolean salir = false;
         while (!salir) {
@@ -64,7 +73,7 @@ public class menuAdministrador {
             System.out.println("1. Consultar vehiculos");
             System.out.println("2. Crear vehiculo");
             System.out.println("3. Editar vehiculo");
-            System.out.println("4. Volver atrás");
+            System.out.println("4. Volver atrï¿½s");
             System.out.println("Opcion: ");
             int opcion = teclado.nextInt();
 
@@ -86,35 +95,39 @@ public class menuAdministrador {
             }
         }
     }
+
+    /**
+     * Permite editar la informaciÃ³n de un vehÃ­culo existente en la base de datos.
+     */
     public static void editarVehiculo() {
         try (Connection connection = DriverManager.getConnection(urlBD, username, password)) {
             Scanner scanner = new Scanner(System.in);
-            System.out.println("Ingrese el ID del vehículo a editar:");
+            System.out.println("Ingrese el ID del vehï¿½culo a editar:");
             int idVehiculo = Integer.parseInt(scanner.nextLine());
 
-            // Verificar si el vehículo existe
+            // Verificar si el vehï¿½culo existe
             String existenciaQuery = "SELECT * FROM vehiculos WHERE id_vehiculo = ?";
             PreparedStatement existenciaStatement = connection.prepareStatement(existenciaQuery);
             existenciaStatement.setInt(1, idVehiculo);
             ResultSet existenciaResult = existenciaStatement.executeQuery();
 
             if (existenciaResult.next()) {
-                System.out.println("Ingrese el nuevo modelo del vehículo:");
+                System.out.println("Ingrese el nuevo modelo del vehï¿½culo:");
                 String nuevoModelo = scanner.nextLine();
-                System.out.println("Ingrese la nueva marca del vehículo:");
+                System.out.println("Ingrese la nueva marca del vehï¿½culo:");
                 String nuevaMarca = scanner.nextLine();
-                System.out.println("Ingrese el nuevo combustible del vehículo:");
+                System.out.println("Ingrese el nuevo combustible del vehï¿½culo:");
                 String nuevoCombustible = scanner.nextLine();
-                System.out.println("Ingrese el nuevo color del vehículo:");
+                System.out.println("Ingrese el nuevo color del vehï¿½culo:");
                 String nuevoColor = scanner.nextLine();
-                System.out.println("Ingrese el nuevo motor del vehículo:");
+                System.out.println("Ingrese el nuevo motor del vehï¿½culo:");
                 String nuevoMotor = scanner.nextLine();
-                System.out.println("Ingrese la nueva matrícula del vehículo:");
+                System.out.println("Ingrese la nueva matrï¿½cula del vehï¿½culo:");
                 String nuevaMatricula = scanner.nextLine();
-                System.out.println("Ingrese la nueva carga máxima del vehículo:");
+                System.out.println("Ingrese la nueva carga mï¿½xima del vehï¿½culo:");
                 int nuevaCargaMaxima = Integer.parseInt(scanner.nextLine());
 
-                // Actualizar los datos del vehículo
+                // Actualizar los datos del vehï¿½culo
                 String editarQuery = "UPDATE vehiculos SET modelo = ?, marca = ?, combustible = ?, color = ?, motor = ?, matricula = ?, carga_maxima = ? WHERE id_vehiculo = ?";
                 PreparedStatement editarStatement = connection.prepareStatement(editarQuery);
                 editarStatement.setString(1, nuevoModelo);
@@ -127,9 +140,9 @@ public class menuAdministrador {
                 editarStatement.setInt(8, idVehiculo);
                 editarStatement.executeUpdate();
 
-                System.out.println("El vehículo ha sido editado correctamente.");
+                System.out.println("El vehï¿½culo ha sido editado correctamente.");
             } else {
-                System.out.println("No se encontró ningún vehículo con el ID proporcionado.");
+                System.out.println("No se encontrï¿½ ningï¿½n vehï¿½culo con el ID proporcionado.");
             }
 
             scanner.close();
@@ -138,56 +151,68 @@ public class menuAdministrador {
         }
     }
 
+    /**
+     * MÃ©todo que permite al administrador consultar los vehÃ­culos existentes en la
+     * base de datos.
+     */
     public static void consultarVehiculos() {
         try (Connection connection = DriverManager.getConnection(urlBD, username, password)) {
             String query = "SELECT * FROM vehiculos";
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
 
-            while (resultSet.next()) {
-                int id_vehiculo = resultSet.getInt("id_vehiculo");
-                String modelo = resultSet.getString("modelo");
-                String marca = resultSet.getString("marca");
-                String combustible = resultSet.getString("combustible");
-                String color = resultSet.getString("color");
-                String motor = resultSet.getString("motor");
-                String matricula = resultSet.getString("matricula");
-                int carga_maxima = resultSet.getInt("carga_maxima");
+            if (resultSet.next()) {
+                do {
+                    int id_vehiculo = resultSet.getInt("id_vehiculo");
+                    String modelo = resultSet.getString("modelo");
+                    String marca = resultSet.getString("marca");
+                    String combustible = resultSet.getString("combustible");
+                    String color = resultSet.getString("color");
+                    String motor = resultSet.getString("motor");
+                    String matricula = resultSet.getString("matricula");
+                    int carga_maxima = resultSet.getInt("carga_maxima");
 
-                System.out.println("ID Vehículo: " + id_vehiculo);
-                System.out.println("Modelo: " + modelo);
-                System.out.println("Marca: " + marca);
-                System.out.println("Combustible: " + combustible);
-                System.out.println("Color: " + color);
-                System.out.println("Motor: " + motor);
-                System.out.println("Matrícula: " + matricula);
-                System.out.println("Carga Máxima: " + carga_maxima);
-                System.out.println();
-                System.out.println("No se encontró ningún usuario con el DNI proporcionado.");
+                    System.out.println("ID VehÃ­culo: " + id_vehiculo);
+                    System.out.println("Modelo: " + modelo);
+                    System.out.println("Marca: " + marca);
+                    System.out.println("Combustible: " + combustible);
+                    System.out.println("Color: " + color);
+                    System.out.println("Motor: " + motor);
+                    System.out.println("MatrÃ­cula: " + matricula);
+                    System.out.println("Carga MÃ¡xima: " + carga_maxima);
+                    System.out.println();
+                } while (resultSet.next());
+            } else {
+                System.out.println("No se encontraron vehÃ­culos en la base de datos.");
             }
 
             resultSet.close();
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error al consultar el usuario: " + e.getMessage());
+            System.out.println("Error al consultar los vehÃ­culos: " + e.getMessage());
         }
     }
+
+    /**
+     * MÃ©todo que permite al administrador crear un nuevo vehÃ­culo en la base de
+     * datos.
+     */
     public static void crearVehiculo() {
         try (Connection connection = DriverManager.getConnection(urlBD, username, password)) {
             Scanner scanner = new Scanner(System.in);
-            System.out.println("Ingrese el modelo del vehículo:");
+            System.out.println("Ingrese el modelo del vehï¿½culo:");
             String modelo = scanner.nextLine();
-            System.out.println("Ingrese la marca del vehículo:");
+            System.out.println("Ingrese la marca del vehï¿½culo:");
             String marca = scanner.nextLine();
-            System.out.println("Ingrese el combustible del vehículo:");
+            System.out.println("Ingrese el combustible del vehï¿½culo:");
             String combustible = scanner.nextLine();
-            System.out.println("Ingrese el color del vehículo:");
+            System.out.println("Ingrese el color del vehï¿½culo:");
             String color = scanner.nextLine();
-            System.out.println("Ingrese el motor del vehículo:");
+            System.out.println("Ingrese el motor del vehï¿½culo:");
             String motor = scanner.nextLine();
-            System.out.println("Ingrese la matrícula del vehículo:");
+            System.out.println("Ingrese la matrï¿½cula del vehï¿½culo:");
             String matricula = scanner.nextLine();
-            System.out.println("Ingrese la carga máxima del vehículo:");
+            System.out.println("Ingrese la carga mï¿½xima del vehï¿½culo:");
             int carga_maxima = Integer.parseInt(scanner.nextLine());
 
             String query = "INSERT INTO vehiculos (modelo, marca, combustible, color, motor, matricula, carga_maxima) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -205,6 +230,11 @@ public class menuAdministrador {
             e.printStackTrace();
         }
     }
+
+    /**
+     * MÃ©todo que muestra el menÃº de usuarios y permite al administrador seleccionar
+     * una opciÃ³n.
+     */
     public static void menuUsuariosAdministrador() {
         boolean salir = false;
         while (!salir) {
@@ -227,7 +257,7 @@ public class menuAdministrador {
                     crearUsuario();
                     break;
                 case 3:
-                    salir = true;
+                    salir = true; // TODO crear editar usuario.
                     break;
                 case 4:
                     return; // Volver atrÃ¡s al menÃº principal
@@ -238,14 +268,16 @@ public class menuAdministrador {
 
     }
 
-    public static void menuVehiculosADministrador() {
-        System.out.println("******* MENU ADMINISTRADOR *******");
-        System.out.println();
-        System.out.println("1. Consualtar vehiculos");
-        System.out.println("2. Crear vehiculo");
-        System.out.println("3. Editar vehiculo");
-    }
+    /**
+     * MÃ©todo que muestra el menÃº de vehÃ­culos y permite al administrador
+     * seleccionar una opciÃ³n.
+     */
+    
 
+    /**
+     * MÃ©todo que muestra el menÃº de informes y permite al administrador seleccionar
+     * una opciÃ³n.
+     */
     public static void informes() {
         System.out.println("******* MENU ADMINISTRADOR *******");
         System.out.println("1. Crear informe");
@@ -265,6 +297,10 @@ public class menuAdministrador {
         scanner.close();
     }
 
+    /**
+     * MÃ©todo que permite al administrador crear un nuevo informe y guardarlo en un
+     * archivo de texto.
+     */
     public static void crearInforme() {
 
         Scanner scanner = new Scanner(System.in);
@@ -300,6 +336,10 @@ public class menuAdministrador {
         scanner.close();
     }
 
+    /**
+     * MÃ©todo que permite al administrador crear un nuevo usuario en la base de
+     * datos.
+     */
     public static void crearUsuario() {
 
         try (Connection connection = DriverManager.getConnection(urlBD, username, password)) {
@@ -335,6 +375,9 @@ public class menuAdministrador {
         }
     }
 
+    /**
+     * MÃ©todo que permite al administrador consultar un usuario en la base de datos.
+     */
     public static void consultarUsuario() {
         System.out.println("DNI: ");
         String dni = teclado.next();
@@ -374,6 +417,10 @@ public class menuAdministrador {
 
     }
 
+    /**
+     * MÃ©todo que permite al administrador consultar varios usuarios en la base de
+     * datos.
+     */
     public static void consultarUsuarios() {
         boolean consultarOtro = true;
         do {
@@ -387,6 +434,9 @@ public class menuAdministrador {
         } while (consultarOtro);
     }
 
+    /**
+     * MÃ©todo que muestra el menÃº de carniceros.
+     */
     public static void carniceros() {
         System.out.println("******* MENU ADMINISTRADOR *******");
         System.out.println();

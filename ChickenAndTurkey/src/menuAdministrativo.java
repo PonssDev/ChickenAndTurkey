@@ -5,9 +5,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+/**
+ * Clase que representa el menú administrativo de la aplicación.
+ * Extiende la clase Principal.
+ */
+
 public class menuAdministrativo extends Principal {
     static Scanner teclado = new Scanner(System.in);
 
+    /**
+     * Muestra el menú administrativo y permite al usuario seleccionar opciones.
+     */
     public static void mostrarMenu() {
         boolean salir = false;
         while (!salir) {
@@ -36,8 +44,10 @@ public class menuAdministrativo extends Principal {
         }
     }
 
-
-
+    /**
+     * Muestra el menú de usuarios administrativo y permite al usuario seleccionar
+     * opciones.
+     */
     public static void menuUsuariosAdministrativo() {
         System.out.println("** MENU USUARIOS **");
         System.out.println();
@@ -46,7 +56,7 @@ public class menuAdministrativo extends Principal {
         System.out.println("3. Salir");
         System.out.println("Opción: ");
         int opcion = teclado.nextInt();
-    
+
         switch (opcion) {
             case 1:
                 consultarUsuarios();
@@ -62,8 +72,10 @@ public class menuAdministrativo extends Principal {
                 break;
         }
     }
-    
 
+    /**
+     * Consulta un usuario por su DNI.
+     */
     public static void consultarUsuarios() {
         System.out.println("** CONSULTAR USUARIOS **");
         System.out.println();
@@ -95,27 +107,30 @@ public class menuAdministrativo extends Principal {
         }
     }
 
+    /**
+     * Lista todos los usuarios.
+     */
     public static void listarUsuarios() {
         String urlBD = "jdbc:mysql://localhost:3306/Chickenandturkey";
         String username = "admin";
         String password = "chicken123";
-    
+
         String query = "SELECT t.DNI, t.nombre, t.apellidos, t.edad, r.rol " +
                 "FROM Trabajadores t " +
                 "JOIN roles r ON t.id_roles = r.id";
-    
+
         try (Connection conn = DriverManager.getConnection(urlBD, username, password);
-             PreparedStatement statement = conn.prepareStatement(query)) {
-    
+                PreparedStatement statement = conn.prepareStatement(query)) {
+
             ResultSet resultSet = statement.executeQuery();
-    
+
             while (resultSet.next()) {
                 String dni = resultSet.getString("DNI");
                 String nombre = resultSet.getString("nombre");
                 String apellidos = resultSet.getString("apellidos");
                 int edad = resultSet.getInt("edad");
                 String rol = resultSet.getString("rol");
-    
+
                 System.out.println("DNI: " + dni);
                 System.out.println("Nombre: " + nombre);
                 System.out.println("Apellidos: " + apellidos);
@@ -127,8 +142,13 @@ public class menuAdministrativo extends Principal {
             System.out.println("Error al consultar los usuarios: " + e.getMessage());
         }
     }
-    
 
+    /**
+     * Consulta un usuario por su DNI en la base de datos.
+     *
+     * @param dni el DNI del usuario a consultar.
+     * @return true si el usuario es encontrado, false si no se encuentra.
+     */
     static boolean consultarUsuarioPorDNI(String dni) {
         String urlBD = "jdbc:mysql://localhost:3306/Chickenandturkey";
         String username = "admin";
@@ -140,12 +160,12 @@ public class menuAdministrativo extends Principal {
                 "WHERE t.DNI = ?";
 
         try (Connection conn = DriverManager.getConnection(urlBD, username, password);
-             PreparedStatement statement = conn.prepareStatement(query)) {
+                PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setString(1, dni);
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                
+
                 String nombre = resultSet.getString("nombre");
                 String apellidos = resultSet.getString("apellidos");
                 int edad = resultSet.getInt("edad");
@@ -167,6 +187,9 @@ public class menuAdministrativo extends Principal {
         }
     }
 
+    /**
+     * Busca un vehículo por su matrícula.
+     */
     public static void buscarVehiculo() {
         System.out.println("** BUSCAR VEHÍCULO **");
         System.out.println();
@@ -196,6 +219,12 @@ public class menuAdministrativo extends Principal {
         }
     }
 
+    /**
+     * Busca un vehículo por su matrícula en la base de datos.
+     *
+     * @param matricula la matrícula del vehículo a buscar.
+     * @return true si el vehículo es encontrado, false si no se encuentra.
+     */
     public static boolean buscarVehiculoPorMatricula(String matricula) {
         String urlBD = "jdbc:mysql://localhost:3306/Chickenandturkey";
         String username = "admin";
