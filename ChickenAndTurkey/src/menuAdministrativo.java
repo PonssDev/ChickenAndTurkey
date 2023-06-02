@@ -25,24 +25,31 @@ public class menuAdministrativo extends Principal {
             System.out.println("2. Vehículos");
             System.out.println("3. Salir");
             System.out.println("Opción: ");
-            int opcion = teclado.nextInt();
-
-            switch (opcion) {
-                case 1:
-                    menuUsuariosAdministrativo();
-                    break;
-                case 2:
-                    buscarVehiculo();
-                    break;
-                case 3:
-                    salir = true;
-                    break;
-                default:
-                    System.out.println("Opción inválida. Por favor, seleccione una opción válida.");
-                    break;
+            
+            if (teclado.hasNextInt()) {
+                int opcion = teclado.nextInt();
+                
+                switch (opcion) {
+                    case 1:
+                        menuUsuariosAdministrativo();
+                        break;
+                    case 2:
+                        buscarVehiculo();
+                        break;
+                    case 3:
+                        salir = true;
+                        break;
+                    default:
+                        System.out.println("Opción inválida. Por favor, seleccione una opción válida.");
+                        break;
+                }
+            } else {
+                System.out.println("Entrada inválida. Por favor, ingrese un número entero.");
+                teclado.next(); // Consumir la entrada inválida
             }
         }
     }
+
 
     /**
      * Muestra el menú de usuarios administrativo y permite al usuario seleccionar
@@ -55,23 +62,30 @@ public class menuAdministrativo extends Principal {
         System.out.println("2. Listar usuarios");
         System.out.println("3. Salir");
         System.out.println("Opción: ");
-        int opcion = teclado.nextInt();
-
-        switch (opcion) {
-            case 1:
-                consultarUsuarios();
-                break;
-            case 2:
-                listarUsuarios();
-                break;
-            case 3:
-                // Salir del menú usuarios
-                break;
-            default:
-                System.out.println("Opción inválida. Por favor, seleccione una opción válida.");
-                break;
+        
+        if (teclado.hasNextInt()) { // Verificar si hay un entero disponible
+            int opcion = teclado.nextInt();
+            
+            switch (opcion) {
+                case 1:
+                    consultarUsuarios();
+                    break;
+                case 2:
+                    listarUsuarios();
+                    break;
+                case 3:
+                    // Salir del menú usuarios
+                    break;
+                default:
+                    System.out.println("Opción inválida. Por favor, seleccione una opción válida.");
+                    break;
+            }
+        } else {
+            System.out.println("Entrada inválida. Por favor, ingrese un número entero.");
+            teclado.next(); // Consumir la entrada inválida para evitar un bucle infinito
         }
     }
+
 
     /**
      * Consulta un usuario por su DNI.
