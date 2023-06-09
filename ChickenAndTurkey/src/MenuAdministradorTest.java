@@ -97,14 +97,14 @@ public class MenuAdministradorTest {
             double cargaMaxima = resultSet.getDouble("carga_maxima");
 
             // Verificar los valores obtenidos
-            Assert.assertEquals("prueba", modelo);
+            Assert.assertEquals("Toyota Camry", modelo);
             Assert.assertEquals(1, idVehiculo);
-            Assert.assertEquals("45185631ss", marca);
-            Assert.assertEquals("nuevo", combustible);
-            Assert.assertEquals("nuevo", color);
-            Assert.assertEquals("nuevo", motor);
-            Assert.assertEquals("451851651s", matricula);
-            Assert.assertEquals(100.0, cargaMaxima, 0.01);
+            Assert.assertEquals("Toyota", marca);
+            Assert.assertEquals("Gasolina", combustible);
+            Assert.assertEquals("Blanco", color);
+            Assert.assertEquals("2.5L", motor);
+            Assert.assertEquals("XYZ789", matricula);
+            Assert.assertEquals(550, cargaMaxima, 0.01);
 
             // Cerrar la conexión y liberar recursos
             resultSet.close();

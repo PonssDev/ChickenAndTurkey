@@ -21,7 +21,7 @@ public class MenuAdministrativoTest {
     @Test
     public void testBuscarVehiculoPorMatricula() {
         // Arrange
-        String matriculaExistente = "451851651s";
+        String matriculaExistente = "XYZ789";
         String matriculaNoExistente = "XYZ789876f";
 
         // Act
