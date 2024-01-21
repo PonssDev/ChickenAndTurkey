@@ -1,3 +1,3 @@
 # ChickenAndTurkey
 
-#Exercise for school, I forgot if it works
+#Exercise for school, I think it still works
